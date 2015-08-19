@@ -1,18 +1,40 @@
 ;(function($, window) {
-	// 把时间间隔（毫秒数）转换成倒计时格式
-	function milliToCountDown(dur) {
-		var scale = [1000, 60, 60, 24, 30, 12];
-		var l = scale.length;
-		var result = {
-				milli: '00',sec: '00',mini: '00',hour: '00',
-				day: '00',month: '00',year: '00'
-			};
-		if (dur <= 0) {
-			return result;
-		}
-		for (var i = 0; i < l; i++) {
+	/**
+	 * 格式化数字模式不足两位的数字，前面补0
+	 * @param  {[int]} n [目标数字]
+	 * @param  {[int]} l [设定长度]
+	 * @return {[string]}   [格式化后的字符串]
+	 */
+	function formatZero(n, l) {
+		l = l || 2;
+		n = +n.toString().split('');
 
+		while(n.length < l) {n.unshift(0);}
+
+		return n.join('');
+	}
+	/**
+	 * 把时间间隔（毫秒数）转换成倒计时格式
+	 * @param  {[int]} dur [时间间隔毫秒数]
+	 * @return {[obj]}     [转换后的时间格式数据，从年到毫秒]
+	 */
+	function milliToCountDown(dur) {
+		var S = [
+			{k: 'milli', s: 1000},{k: 'sec', s: 60},{k: 'mini', s: 60},
+			{k: 'hour', s: 24},{k: 'day', s: 30},{k: 'month', s: 12},
+			{k: 'year', s: 0}
+		];
+		var l = S.length;
+		var result = {};
+
+		for (var i = 0; i < l; i++) {
+			var t = dur <= 0 ? 0 : (S[i].s ? dur % S[i].s : dur);//取余数
+			result[scale[i].k] = formatZero(t);
+
+			if (dur <= 0 || !S[i].s) continue;
+			dur = Math.floor(dur / S[i].s); //取除数
 		}
+		return result;
 	}
 
 	$.yCount = function() {
