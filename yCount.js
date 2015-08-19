@@ -7,8 +7,7 @@
 	 */
 	function formatZero(n, l) {
 		l = l || 2;
-		n = +n.toString().split('');
-
+		n = (+n).toString().split('');
 		while(n.length < l) {n.unshift(0);}
 
 		return n.join('');
@@ -28,11 +27,13 @@
 		var result = {};
 
 		for (var i = 0; i < l; i++) {
-			var t = dur <= 0 ? 0 : (S[i].s ? dur % S[i].s : dur);//取余数
-			result[scale[i].k] = formatZero(t);
+			var s = S[i].s,k = S[i].k;
+			var t = dur <= 0 ? 0 : (s ? dur % s : dur);//取余数
 
-			if (dur <= 0 || !S[i].s) continue;
-			dur = Math.floor(dur / S[i].s); //取除数
+			result[k] = formatZero(t, k == 'milli' ? 3 : 2);
+
+			if (dur <= 0 || !s) continue;
+			dur = Math.floor(dur / s); //取除数
 		}
 		return result;
 	}
