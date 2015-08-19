@@ -37,8 +37,21 @@
 		}
 		return result;
 	}
+	/**
+	 * [获取倒计时]
+	 * @param  {[string]} time [时间格式字符串，例如2015-08-19 14:04:56, 时分秒可以不加，默认是目标时间凌晨零点]
+	 * @return {[obj]}      [当前时间距离目标时间的时间间隔信息]
+	 */
+	$.yCount = function(time) {
+		var T = [];
+		time = time.split(' ');
 
-	$.yCount = function() {
+		T = T.concat(time[0].split('-')).concat(time[1] ? time[1].split(':') : []);
 
+		var future = new Date(Date.UTC(T[0], T[1] - 1, T[2], T[3] || 0, T[4] || 0, T[5] || 0)),
+			now = new Date(),
+			dur = Math.round((future.getTime() - now.getTime())) + future.getTimezoneOffset() * 60 * 1000;
+
+		return milliToCountDown(dur);
 	}
 })(jQuery, this);
